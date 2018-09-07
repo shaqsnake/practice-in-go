@@ -7,9 +7,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 )
 
+// Quote
 type Quote struct {
 	Status           string
 	Name             string
@@ -39,21 +41,49 @@ func main() {
 		Timeout:   time.Second * 5,
 	}
 
-	resp, err := client.Get("http://dev.markitondemand.com/MODApis/Api/v2/Quote?symbol=goog")
-	if err != nil {
-		fmt.Println(err)
-		return
+	start := time.Now()
+
+	stockSymbols := []string{
+		"googl",
+		"msft",
+		"aapl",
+		"bbry",
+		"hpq",
+		"vz",
+		"t",
+		"tmus",
+		"s",
 	}
-	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-		return
+	var wg sync.WaitGroup
+
+	for _, symbol := range stockSymbols {
+		wg.Add(1)
+		go func(symbol string) {
+			resp, err := client.Get("http://dev.markitondemand.com/MODApis/Api/v2/Quote?symbol=" + symbol)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			defer resp.Body.Close()
+
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			quote := new(Quote)
+			xml.Unmarshal(body, &quote)
+
+			fmt.Printf("%s: %.2f\n", quote.Name, quote.LastPrice)
+			wg.Done()
+		}(symbol)
 	}
 
-	quote := new(Quote)
-	xml.Unmarshal(body, &quote)
+	wg.Wait()
 
-	fmt.Printf("%s: %.2f", quote.Name, quote.LastPrice)
+	elapsed := time.Since(start)
+	fmt.Println("Execution time: %s", elapsed)
+
 }
