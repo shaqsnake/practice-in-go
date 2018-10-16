@@ -38,7 +38,7 @@ func SavePO(po *PurchaseOrder, shouldFail bool) *Promise {
 	result.failureChannel = make(chan error, 1)
 
 	go func() {
-		time.Sleep(2 * time.Second)
+		// time.Sleep(2 * time.Second)
 		if shouldFail {
 			result.failureChannel <- errors.New("Failed to save purchase order!")
 		} else {
