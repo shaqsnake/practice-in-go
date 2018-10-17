@@ -73,9 +73,9 @@ func transform(extractChannel, transformChannel chan *Order) {
 
 	var wg sync.WaitGroup
 	for order := range extractChannel {
-		// time.Sleep(3 * time.Millisecond)
 		wg.Add(1)
 		go func(order *Order) {
+			time.Sleep(3 * time.Millisecond)
 			order.UnitCost = productList[order.PartNumber].UnitCost
 			order.UnitPrice = productList[order.PartNumber].UnitPrice	
 			transformChannel <- order
@@ -95,9 +95,9 @@ func load(transfromChannel chan *Order, doneChannel chan bool) {
 
 	var wg sync.WaitGroup
 	for order := range transfromChannel {
-		// time.Sleep(1 * time.Millisecond)
 		wg.Add(1)
 		go func(order *Order) {
+			time.Sleep(1 * time.Millisecond)
 			fmt.Fprintf(f, "%20s %15d %12.2f %12.2f %15.2f %15.2f\n", order.PartNumber, order.Quantity, order.UnitCost, order.UnitPrice, order.UnitCost * float64(order.Quantity), order.UnitPrice * float64(order.Quantity))
 			wg.Done()
 		}(order)
