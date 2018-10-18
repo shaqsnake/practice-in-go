@@ -1,3 +1,4 @@
-debug
+debug*
 .vscode/*
 *.log
+TDD-in-Go/prime-factors/debug.test

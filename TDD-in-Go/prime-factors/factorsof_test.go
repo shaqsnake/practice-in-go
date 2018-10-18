@@ -33,6 +33,15 @@ func TestFactorsOf(t *testing.T) {
 		// factors of n
 		{1, isEmptyList},
 		{2, is(2)},
+		{3, is(3)},
+		{4, is(2, 2)},
+		{5, is(5)},
+		{6, is(2, 3)},
+		{7, is(7)},
+		{8, is(2, 2, 2)},
+		{9, is(3, 3)},
+		{10, is(2, 5)},
+		{2*2*3*5*7*11*13, is(2, 2, 3, 5, 7, 11, 13)},
 	}
 
 	// SECTION 3: test logic
