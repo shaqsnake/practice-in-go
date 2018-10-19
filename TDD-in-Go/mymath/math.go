@@ -1,9 +1,14 @@
 package mymath
 
-func Add(x ...int) int {
+func Add(nums ...int) int {
 	var result int
 
-	for _, i := range x {
+	if len(nums) == 0 {
+		println("No arguments provided")
+		return 0
+	}
+
+	for _, i := range nums {
 		result += i
 	}
 
