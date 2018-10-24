@@ -84,6 +84,6 @@ func main() {
 	wg.Wait()
 
 	elapsed := time.Since(start)
-	fmt.Println("Execution time: %s", elapsed)
+	fmt.Println("Execution time: ", elapsed)
 
 }
