@@ -26,7 +26,8 @@ func main() {
 
 // GenerateQRCode return bytes can encode to qrcode
 func GenerateQRCode(w io.Writer, code string, version Version) error {
-	img := image.NewNRGBA(image.Rect(0, 0, 21, 21))
+	size := 4*int(version) + 17
+	img := image.NewNRGBA(image.Rect(0, 0, size, size))
 	return png.Encode(w, img)
 }
 
