@@ -18,14 +18,16 @@ func main() {
 	}
 	defer file.Close()
 
-	err = GenerateQRCode(file, "555-2368")
+	err = GenerateQRCode(file, "555-2368", Version(1))
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 // GenerateQRCode return bytes can encode to qrcode
-func GenerateQRCode(w io.Writer, code string) error {
+func GenerateQRCode(w io.Writer, code string, version Version) error {
 	img := image.NewNRGBA(image.Rect(0, 0, 21, 21))
 	return png.Encode(w, img)
 }
+
+type Version int8
