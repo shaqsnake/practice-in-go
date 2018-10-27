@@ -31,4 +31,5 @@ func GenerateQRCode(w io.Writer, code string, version Version) error {
 	return png.Encode(w, img)
 }
 
+// Version is alias of int8
 type Version int8
