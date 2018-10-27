@@ -1,25 +1,19 @@
 package main
 
 import (
-	"testing"
 	"bytes"
 	"image/png"
+	"testing"
 )
 
-func TestGenerateQRCodeReturnsValue(t *testing.T) {
-	result := GenerateQRCode("555-2368")
-
-	if result == nil {
-		t.Errorf("Generated QRcode is null")
-	}
-	if len(result) == 0 {
-		t.Errorf("Generated QRcode has no data")
-	}
-}
-
 func TestGenerateQRCodeReturnsPNG(t *testing.T) {
-	result := GenerateQRCode("555-2368")
-	buffer := bytes.NewBuffer(result)
+	buffer := new(bytes.Buffer)
+	GenerateQRCode(buffer, "555-2368")
+
+	if buffer.Len() == 0 {
+		t.Errorf("No QRCode generated")
+	}
+
 	_, err := png.Decode(buffer)
 
 	if err != nil {
