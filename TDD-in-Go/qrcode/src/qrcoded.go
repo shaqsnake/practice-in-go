@@ -5,16 +5,23 @@ import (
 	"image"
 	"image/png"
 	"io"
+	"log"
 	"os"
 )
 
 func main() {
 	fmt.Println("Hello QR Code")
 
-	file, _ := os.Create("qrcode.png")
+	file, err := os.Create("qrcode.png")
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer file.Close()
 
-	GenerateQRCode(file, "555-2368")
+	err = GenerateQRCode(file, "555-2368")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // GenerateQRCode return bytes can encode to qrcode
