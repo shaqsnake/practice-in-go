@@ -1,5 +1,5 @@
 syntax = "proto3";
-package go.micro.srv.consignment;
+package consignment;
 
 // 货轮服务
 service ShippingService {
