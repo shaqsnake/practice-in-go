@@ -1,19 +1,13 @@
 package main
 
 import (
-	"sync"
 	"context"
-	"net"
 	"log"
+	"sync"
 
 	// Import the generated protobuf code
 	pb "micro/consignment-service/proto/consignment"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
-)
-
-const (
-	port = ":50051"
+	"github.com/micro/go-micro"
 )
 
 type repository interface {
@@ -48,41 +42,41 @@ type service struct {
 }
 
 // CreateConsignment
-func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment) (*pb.Response, error) {
+func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
 	// Save our consignment
 	consignment, err := s.repo.Create(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// Return matching the 'Response' message we created in our protobuf definition.
-	return &pb.Response{Created: true, Consignment: consignment}, nil
+	res.Created = true
+	res.Consignment = consignment
+	return nil
 }
 
 // GetConsignments
-func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest) (*pb.Response, error) {
+func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
 	consignments := s.repo.GetAll()
-	return &pb.Response{Consignments: consignments}, nil
+	res.Consignments = consignments
+	return nil
 }
 
 func main() {
 	repo := &Repository{}
 
-	// Set-up our gRPC server.
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	s := grpc.NewServer()
+	// Create a new service.
+	srv := micro.NewService(
+		micro.Name("micro.consignment.service"),
+	)
 
-	// Register our service with the gRPC server.
-	pb.RegisterShippingServiceServer(s, &service{repo})
+	// Init will parse the command line flags.
+	srv.Init()
 
-	// Register reflection service on gRPC server.
-	reflection.Register(s)
+	// Register handler
+	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
 
-	log.Println("Running on port: ", port)
-	if err := s.Serve(lis); err != nil {
+	if err := srv.Run(); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
