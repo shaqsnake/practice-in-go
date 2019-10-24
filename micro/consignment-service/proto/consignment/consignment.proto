@@ -4,8 +4,10 @@ package consignment;
 // 货轮服务
 service ShippingService {
     // 创建托运货物
-    rpc CreateConsignment (Consignment) returns (Response) {
-    }
+    rpc CreateConsignment(Consignment) returns (Response) {}
+
+    // 查看托运货物信息
+    rpc GetConsignments(GetRequest) returns (Response) {}
 }
 
 // 托运货物
@@ -25,8 +27,12 @@ message Container {
     string user_id = 4;     // 所属用户编号
 }
 
+// 查看货物信息的请求
+message GetRequest {}
+
 // 托运结果
 message Response {
-    bool created = 1;            // 创建成功
-    Consignment consignment = 2; // 托运货物
+    bool created = 1;                      // 创建成功
+    Consignment consignment = 2;           // 新托运货物
+    repeated Consignment consignments = 3; // 目前所有托运货物
 }
