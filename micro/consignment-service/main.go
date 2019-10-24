@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	// Import the generated protobuf code
-	pb "micro/consignment-service/proto/consignment"
+	pb "consignment-service/proto/consignment"
 	"github.com/micro/go-micro"
 )
 
