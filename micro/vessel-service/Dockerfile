@@ -1,5 +1,5 @@
-# FROM alpine:latest
-FROM debian:latest
+FROM alpine:latest
+# FROM debian:latest
 
 RUN mkdir /app
 WORKDIR /app
