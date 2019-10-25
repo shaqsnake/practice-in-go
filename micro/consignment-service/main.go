@@ -6,8 +6,8 @@ import (
 	"sync"
 
 	// Import the generated protobuf code
-	pb "micro/consignment-service/proto/consignment"
 	"github.com/micro/go-micro"
+	pb "micro/consignment-service/proto/consignment"
 )
 
 type repository interface {
@@ -17,7 +17,7 @@ type repository interface {
 
 // Repository - Dummy repository, simulates the use of datastore of some kind.
 type Repository struct {
-	mu          sync.RWMutex
+	mu           sync.RWMutex
 	consignments []*pb.Consignment
 }
 
@@ -37,12 +37,12 @@ func (repo *Repository) GetAll() []*pb.Consignment {
 
 // Service should implement all of the methods to satisfy the service
 // we defined in our protobuf definition.
-type service struct {
+type Service struct {
 	repo repository
 }
 
 // CreateConsignment
-func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
+func (s *Service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
 	// Save our consignment
 	consignment, err := s.repo.Create(req)
 	if err != nil {
@@ -56,7 +56,7 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, re
 }
 
 // GetConsignments
-func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
+func (s *Service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
 	consignments := s.repo.GetAll()
 	res.Consignments = consignments
 	return nil
@@ -74,9 +74,9 @@ func main() {
 	srv.Init()
 
 	// Register handler
-	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
+	pb.RegisterShippingServiceHandler(srv.Server(), &Service{repo})
 
 	if err := srv.Run(); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		log.Fatalf("Failed to serve: %v", err)
 	}
 }
