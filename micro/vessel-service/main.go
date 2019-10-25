@@ -9,17 +9,17 @@ import (
 	pb "github.com/shaqsnake/micro/vessel-service/proto/vessel"
 )
 
-type repository interface {
+type Repository interface {
 	FindAvailable(*pb.Specification) (*pb.Vessel, error)
 }
 
-type Repository struct {
+type repository struct {
 	vessels []*pb.Vessel
 }
 
 // FindAvailable - checks a specificaiton against a map of vessels,
 // return vaild vessel if capacity and weight are below vessel's.
-func (repo *Repository) FindAvailable(spec *pb.Specification) (*pb.Vessel, error) {
+func (repo *repository) FindAvailable(spec *pb.Specification) (*pb.Vessel, error) {
 	for _, vessel := range repo.vessels {
 		if spec.Capacity <= vessel.Capacity && spec.MaxWeight <= vessel.MaxWeight {
 			return vessel, nil
@@ -30,7 +30,7 @@ func (repo *Repository) FindAvailable(spec *pb.Specification) (*pb.Vessel, error
 
 // gRPC handler
 type Service struct {
-	repo repository
+	repo Repository
 }
 
 func (s *Service) FindAvailable(ctx context.Context, req *pb.Specification, res *pb.Response) error {
@@ -49,7 +49,7 @@ func main() {
 	vessels := []*pb.Vessel{
 		&pb.Vessel{Id: "v-001", Name: "Noah Ork", MaxWeight: 200000, Capacity: 500},
 	}
-	repo := &Repository{vessels}
+	repo := &repository{vessels}
 
 	srv := micro.NewService(
 		micro.Name("micro.vessel.service"),
