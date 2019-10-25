@@ -1,4 +1,4 @@
-module micro
+module github.com/shaqsnake/micro
 
 go 1.12
 
