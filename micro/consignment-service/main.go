@@ -7,7 +7,7 @@ import (
 
 	// Import the generated protobuf code
 	"github.com/micro/go-micro"
-	pb "micro/consignment-service/proto/consignment"
+	pb "github.com/shaqsnake/micro/consignment-service/proto/consignment"
 )
 
 type repository interface {

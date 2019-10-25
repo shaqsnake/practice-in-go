@@ -1,14 +1,14 @@
 package main
 
 import (
-	"log"
+	"context"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"os"
-	"context"
 
-	pb "micro/consignment-service/proto/consignment"
-	micro "github.com/micro/go-micro"
+	"github.com/micro/go-micro"
+	pb "github.com/shaqsnake/micro/consignment-service/proto/consignment"
 )
 
 const (

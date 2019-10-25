@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/micro/go-micro"
-	pb "micro/vessel-service/proto/vessel"
+	pb "github.com/shaqsnake/micro/vessel-service/proto/vessel"
 )
 
 type repository interface {
