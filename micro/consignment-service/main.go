@@ -34,7 +34,7 @@ func main() {
 	}
 	defer client.Disconnect(context.TODO())
 
-	consignmentCollection := client.Database("micro").Collection("consignments")
+	consignmentCollection := client.Database("micro").Collection("consignment")
 
 	repo := &MongoRepository{consignmentCollection}
 	vesselClient := vesselPb.NewVesselServiceClient("micro.vessel.service", srv.Client())

@@ -12,7 +12,6 @@ import (
 )
 
 const (
-	address         = "localhost:50051"
 	defaultFilename = "consignment.json"
 )
 
@@ -41,7 +40,7 @@ func main() {
 
 	consignment, err := parseFile(file)
 	if err != nil {
-		log.Fatalf("Could not parse file: %v, err")
+		log.Fatalf("Could not parse file: %v", err)
 	}
 
 	r, err := client.CreateConsignment(context.Background(), consignment)

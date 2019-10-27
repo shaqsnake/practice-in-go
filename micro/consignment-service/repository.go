@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	pb "github.com/shaqsnake/micro/consignment-service/proto/consignment"
@@ -20,17 +21,18 @@ type MongoRepository struct {
 
 // Create -
 func (mongoRepo *MongoRepository) Create(consignment *pb.Consignment) error {
-	_, err := mongoRepo.collection.InsertOne(context.Background(), consignment)
+	_, err := mongoRepo.collection.InsertOne(context.TODO(), consignment)
 	return err
 }
 
 // GetAll -
 func (mongoRepo *MongoRepository) GetAll() ([]*pb.Consignment, error) {
-	cur, err := mongoRepo.collection.Find(context.Background(), nil, nil)
 	var consignments []*pb.Consignment
-	for cur.Next(context.Background()) {
+	cur, err := mongoRepo.collection.Find(context.TODO(), bson.D{})
+	defer cur.Close(context.TODO())
+	for cur.Next(context.TODO()) {
 		var consignment *pb.Consignment
-		if err := cur.Decode(consignment); err != nil {
+		if err := cur.Decode(&consignment); err != nil {
 			return nil, err
 		}
 		consignments = append(consignments, consignment)

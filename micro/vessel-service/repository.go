@@ -21,17 +21,12 @@ type VesselRepository struct {
 // FindAvailable - checks a specificaiton against vessel in db,
 // return vaild vessel if capacity and weight are below vessel's.
 func (vesselRepo *VesselRepository) FindAvailable(spec *pb.Specification) (*pb.Vessel, error) {
-	filter :=  bson.D {
-		{"capacity", bson.D {
-			{"$lte", spec.Capacity},
-			{"$lte", spec.MaxWeight}, 
-		}},
-	}
-	
 	var vessel *pb.Vessel
+	filter := bson.D{{"capacity", bson.M{"$gte": spec.Capacity}}, {"maxweight", bson.M{"$gte": spec.MaxWeight}}}
 	if err := vesselRepo.collection.FindOne(context.TODO(), filter).Decode(&vessel); err != nil {
 		return nil, err
 	}
+
 	return vessel, nil
 }
 
