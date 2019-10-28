@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	db, err := gorm.Open("postgres", "host=localhost user=admin dbname=taiga sslmode=disable password=magic1")
+	db, err := gorm.Open("postgres", "host=localhost user=postgres dbname=postgres sslmode=disable password=micro")
 	if err != nil {
 		log.Fatalf("DB connect error: %v", err)	
 	}
