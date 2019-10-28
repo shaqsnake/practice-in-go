@@ -34,6 +34,14 @@ services:
     environment:
       MICRO_ADDRESS: ":50051"
       MICRO_REGISTRY: "mdns"
+      DB_HOST: "database"
+      DB_NAME: "postgres"
+      DB_USER: "postgres"
+      DB_PASSWORD: "micro"
+    links:
+      - database
+    depends_on:
+      - database
       
   datastore:
     image: mongo
@@ -43,10 +51,18 @@ services:
   database:
     image: postgres
     ports:
-      -5432:5432
+      - 5432:5432
+    environment:
+      LC_ALL: C.UTF-8
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "micro"
+      POSTGRES_DB: "postgres"
 
   vessel-cli:
     build: ./vessel-cli
 
   consignment-cli:
     build: ./consignment-cli
+
+  user-cli:
+    build: ./user-cli

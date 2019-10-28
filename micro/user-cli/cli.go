@@ -16,7 +16,7 @@ func main() {
 	cmd.Init()
 
 	// Create new greeter client
-	client := pb.NewUserServiceClient("go.micro.srv.user", microclient.DefaultClient)
+	client := pb.NewUserServiceClient("micro.user.service", microclient.DefaultClient)
 
 	// Default our flags
 	srv := micro.NewService(
@@ -42,19 +42,23 @@ func main() {
 
 	// Start as service
 	srv.Init(
-		micro.Action(func(c *cli.Context){
-			name := c.String("name")
-			email := c.String("email")
-			password := c.String("password")
-			company := c.String("company")
+		micro.Action(func(c *cli.Context) {
+			log.Printf("%v", c.Args())
+			// name := c.String("name")
+			// email := c.String("email")
+			// password := c.String("password")
+			// company := c.String("company")
+
+			user := &pb.User{
+				Name: "shaqsnake",
+				Email: "shaqsnake@gmail.com",
+				Password: "inputpasswd",
+				Company: "Google",
+			}
+			log.Printf("Add user: %v", user)
 			
 			// Call our user service
-			r, err := client.Create(context.TODO(), &pb.User{
-				Name: name,
-				Email: email,
-				Password: password,
-				Company: company,
-			})
+			r, err := client.Create(context.Background(), user)
 			if err != nil {
 				log.Fatalf("Could not create %v", err)
 			}

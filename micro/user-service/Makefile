@@ -10,7 +10,7 @@ run:
 		-e MICRO_SERVER_ADDRESS=:50051 \
 		-e MICRO_REGISTRY=mdns \
 		-e DB_HOST=localhost \
-		-e DB_NAME=micro \
+		-e DB_NAME=postgres \
 		-e DB_USER=postgres \
 		-e DB_PASSWORD=micro \
 		micro-user-service
