@@ -2,16 +2,25 @@ package main
 
 import (
 	"context"
-	
+	"log"
+
 	pb "github.com/shaqsnake/micro/user-service/proto/user"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type handler struct {
-	repo Repository
-	// tokenService Authable
+	repo         Repository
+	tokenService Authable
 }
 
 func (h *handler) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
+	// Gen hashed password
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	req.Password = string(hashedPass)
 	if err := h.repo.Create(req); err != nil {
 		return err
 	}
@@ -38,11 +47,23 @@ func (h *handler) GetAll(ctx context.Context, req *pb.Request, res *pb.Response)
 }
 
 func (h *handler) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
-	_, err := h.repo.GetByEmailAndPassword(req)
+	log.Println("Logging in with:", req.Email, req.Password)
+	user, err := h.repo.GetByEmail(req.Email)
+	log.Println(user)
 	if err != nil {
 		return err
 	}
-	res.Token = "TestAuth"
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		return err
+	}
+
+	token, err := h.tokenService.Encode(user)
+	if err != nil {
+		return err
+	}
+
+	res.Token = token
 	return nil
 }
 

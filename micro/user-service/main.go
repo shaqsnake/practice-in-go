@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	pb "github.com/shaqsnake/micro/user-service/proto/user"
 	"github.com/micro/go-micro"
+	pb "github.com/shaqsnake/micro/user-service/proto/user"
 )
 
 func main() {
@@ -19,7 +19,9 @@ func main() {
 	db.AutoMigrate(&pb.User{})
 
 	repo := &UserRepository{db}
-	
+
+	tokenService := &TokenService{repo}
+
 	// Set-up user service
 	srv := micro.NewService(
 		micro.Name("micro.user.service"),
@@ -27,7 +29,7 @@ func main() {
 	srv.Init()
 
 	// Register handler
-	pb.RegisterUserServiceHandler(srv.Server(), &handler{repo})
+	pb.RegisterUserServiceHandler(srv.Server(), &handler{repo, tokenService})
 
 	// Run the server
 	if err := srv.Run(); err != nil {

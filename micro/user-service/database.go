@@ -14,7 +14,7 @@ func CreateConnection() (*gorm.DB, error) {
 	user := os.Getenv("DB_USER")
 	dbname := os.Getenv("DB_NAME")
 	password := os.Getenv("DB_PASSWORD")
-	
+
 	dbURI := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", host, user, dbname, password) //Build connection string
 	fmt.Println(dbURI)
 

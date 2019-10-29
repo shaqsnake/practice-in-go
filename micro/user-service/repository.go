@@ -9,14 +9,14 @@ type Repository interface {
 	Create(*pb.User) error
 	Get(id string) (*pb.User, error)
 	GetAll() ([]*pb.User, error)
-	GetByEmailAndPassword(*pb.User) (*pb.User, error)
+	GetByEmail(email string) (*pb.User, error)
 }
 
 type UserRepository struct {
 	db *gorm.DB
 }
 
-func (userRepo *UserRepository) Create(user *pb.User) error{
+func (userRepo *UserRepository) Create(user *pb.User) error {
 	if err := userRepo.db.Create(user).Error; err != nil {
 		return err
 	}
@@ -40,8 +40,10 @@ func (userRepo *UserRepository) GetAll() ([]*pb.User, error) {
 	return users, nil
 }
 
-func (userRepo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, error) {
-	if err := userRepo.db.First(&user).Error; err != nil {
+func (userRepo *UserRepository) GetByEmail(email string) (*pb.User, error) {
+	user := &pb.User{}
+	if err := userRepo.db.Where("email = ?", email).
+		First(&user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
