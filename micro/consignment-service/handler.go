@@ -9,7 +9,7 @@ import (
 )
 
 type handler struct {
-	repo Repository
+	repo         Repository
 	vesselClient vesselPb.VesselServiceClient
 }
 

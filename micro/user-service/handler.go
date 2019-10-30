@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	pb "github.com/shaqsnake/micro/user-service/proto/user"
@@ -68,5 +69,16 @@ func (h *handler) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
 }
 
 func (h *handler) ValidateToken(ctx context.Context, req *pb.Token, res *pb.Token) error {
+	// Decode token
+	claims, err := h.tokenService.Decode(req.Token)
+	if err != nil {
+		return err
+	}
+
+	if claims.User.Id == "" {
+		return errors.New("Invalid user")
+	}
+
+	res.Valid = true
 	return nil
 }
