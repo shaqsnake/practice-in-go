@@ -7,4 +7,4 @@ WORKDIR /app
 ADD consignment.json /app/consignment.json
 ADD consignment-cli /app/consignment-cli
 
-CMD ["./consignment-cli", "consignment.json", "token"]
+CMD ["./consignment-cli", "consignment.json", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7ImlkIjoiNmU5NzdmYjUtMzQxZS00OGM2LWE2ZGMtYzU2M2MxNmE5ODk5IiwibmFtZSI6InNoYXFzbmFrZSIsImNvbXBhbnkiOiJHb29nbGUiLCJlbWFpbCI6InNoYXFzbmFrZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRidFFqVGZsZW5tZjYxVEVUVER2cFdlTmhGUmdqaS9CaExxQi5NYW1JeVlxc1kycHR3SHVoaSJ9LCJleHAiOjE1NzI3OTQyMjAsImlzcyI6Im1pY3JvLnVzZXIuc2VydmljZSJ9.hbTa6NdvXAs0-GDVgj0BQ8nM9fH89Ebh_8n9xnttNzA"]

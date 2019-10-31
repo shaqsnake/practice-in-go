@@ -54,15 +54,15 @@ func main() {
 }
 
 func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
+	meta, ok := metadata.FromContext(ctx)
+	if !ok {
+		return errors.New("No auth meta_data found in request")
+	}
+
+	token := meta["Token"]
+	log.Println("Authenticating with token: ", token)
+
 	return func(ctx context.Context, req server.Request, res interface{}) error {
-		meta, ok := metadata.FromContext(ctx)
-		if !ok {
-			return errors.New("No auth meta_data found in request")
-		}
-
-		token := meta["Token"]
-		log.Println("Authenticating with token: ", token)
-
 		// Auth
 		authClient := userPb.NewUserServiceClient("micro.user.service", client.DefaultClient)
 		_, err := authClient.ValidateToken(context.Background(), &userPb.Token{
