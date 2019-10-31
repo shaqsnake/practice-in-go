@@ -7,6 +7,8 @@ import (
 	pb "github.com/shaqsnake/micro/user-service/proto/user"
 )
 
+const topic = "user.created"
+
 func main() {
 	// Connect to database
 	db, err := CreateConnection()
@@ -28,8 +30,11 @@ func main() {
 	)
 	srv.Init()
 
+	// Get publisher
+	publisher := micro.NewPublisher(topic, srv.Client())
+
 	// Register handler
-	pb.RegisterUserServiceHandler(srv.Server(), &handler{repo, tokenService})
+	pb.RegisterUserServiceHandler(srv.Server(), &handler{repo, tokenService, publisher})
 
 	// Run the server
 	if err := srv.Run(); err != nil {

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 
+	"github.com/micro/go-micro"
 	pb "github.com/shaqsnake/micro/user-service/proto/user"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -12,6 +13,7 @@ import (
 type handler struct {
 	repo         Repository
 	tokenService Authable
+	publisher    micro.Publisher
 }
 
 func (h *handler) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
@@ -26,6 +28,9 @@ func (h *handler) Create(ctx context.Context, req *pb.User, res *pb.Response) er
 		return err
 	}
 	res.User = req
+	if err := h.publisher.Publish(ctx, req); err != nil {
+		return err
+	}
 	return nil
 }
 
