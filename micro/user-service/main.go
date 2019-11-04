@@ -27,6 +27,7 @@ func main() {
 	// Set-up user service
 	srv := micro.NewService(
 		micro.Name("micro.user.service"),
+		micro.Vesion("latest"),
 	)
 	srv.Init()
 

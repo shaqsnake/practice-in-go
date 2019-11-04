@@ -28,6 +28,7 @@ func (h *handler) Create(ctx context.Context, req *pb.User, res *pb.Response) er
 		return err
 	}
 	res.User = req
+
 	if err := h.publisher.Publish(ctx, req); err != nil {
 		return err
 	}
