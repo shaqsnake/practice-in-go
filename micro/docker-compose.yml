@@ -9,8 +9,6 @@ services:
       MICRO_ADRESS: ":50051"
       MICRO_REGISTRY: "mdns"
       DB_HOST: "mongodb://datastore:27017"
-    links:
-      - datastore
     depends_on:
       - datastore
 
@@ -22,8 +20,6 @@ services:
       MICRO_ADDRESS: ":50051"
       MICRO_REGISTRY: "mdns"
       DB_HOST: "mongodb://datastore:27017"
-    links:
-      - datastore
     depends_on:
       - datastore
 
@@ -38,8 +34,6 @@ services:
       DB_NAME: "postgres"
       DB_USER: "postgres"
       DB_PASSWORD: "micro"
-    links:
-      - database
     depends_on:
       - database
 
@@ -49,7 +43,7 @@ services:
       - 50054:50001
     environment:
       MICRO_SERVER_ADDRESS: ":50051"
-      MICRO_REGISTRY: "mdns" 
+      MICRO_REGISTRY: "mdns"
       
   datastore:
     image: mongo
@@ -66,11 +60,25 @@ services:
       POSTGRES_PASSWORD: "micro"
       POSTGRES_DB: "postgres"
 
+  api:
+    command: api --handler=rpc --namespace=micro
+    image: microhq/micro:latest
+    ports:
+      - 8080:8080
+    links:
+      - user-service
+
   vessel-cli:
     build: ./vessel-cli
+    depends_on:
+      - vessel-service
 
   consignment-cli:
     build: ./consignment-cli
+    depends_on:
+      - consignment-service
 
   user-cli:
     build: ./user-cli
+    depends_on:
+      - user-service
